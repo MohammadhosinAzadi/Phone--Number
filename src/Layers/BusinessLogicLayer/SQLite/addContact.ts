@@ -3,7 +3,7 @@ import { addContactInSQLite } from "../../../Layers/DataAccessLayer/SQLite/addCo
 import { validateName } from '../../../Validation/Lojic-Validation/SQLite/validateName'
 import { validatePhone } from '../../../Validation/Lojic-Validation/SQLite/validatePhone'
 
-export async function addContact(contact: Record): Promise<void> {
+export async function addContactsSQLite(contact: Record): Promise<void> {
   await validateName(contact.name)  
   await validatePhone(contact.phone)  
   await addContactInSQLite(contact);

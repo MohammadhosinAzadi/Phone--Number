@@ -1,39 +1,39 @@
 import { currentStorage, StorageType } from "../../Config/storageConfig";
+import { JSONStorage } from "../../Layers/StorageEngines/JSONStorage";
+import { SQLiteStorage } from "../../Layers/StorageEngines/SQLiteStorage";
+import { IContactStorage } from "../../Interface/IContactStorage";
+import { AddContactController } from "../../Layers/ApplicationLayer/addContactController";
+import { RemoveContactController } from "../../Layers/ApplicationLayer/removeContactController";
+import { ViewContactController } from "../../Layers/ApplicationLayer/viewContactController";
+import { EditContactController } from "../../Layers/ApplicationLayer/editContactController";
+import { EditCategoryController } from "../../Layers/ApplicationLayer/editCategoryController";
 
 export interface Controllers {
-  addContactController: () => Promise<void>;
-  removeContactController: () => Promise<void>;
-  viewContactController: () => Promise<void>;
-  editContactController: () => Promise<void>;
-  editCategoryController: () => Promise<void>;
+  addContactController: AddContactController;
+  removeContactController: RemoveContactController;
+  viewContactController: ViewContactController;
+  editContactController: EditContactController;
+  editCategoryController: EditCategoryController;
 }
 
 export async function loadControllers(): Promise<Controllers> {
-  let addContactController: () => Promise<void>;
-  let removeContactController: () => Promise<void>;
-  let viewContactController: () => Promise<void>;
-  let editContactController: () => Promise<void>;
-  let editCategoryController: () => Promise<void>;
+  let storage: IContactStorage;
 
-  if (currentStorage === StorageType.JSON) {
-    addContactController = (await import("../../Layers/ApplicationLayer/JSON/addContactController")).addContactController;
-    removeContactController = (await import("../../Layers/ApplicationLayer/JSON/removeContactController")).removeContactController;
-    viewContactController = (await import("../../Layers/ApplicationLayer/JSON/viewContactController")).viewContactController;
-    editContactController = (await import("../../Layers/ApplicationLayer/JSON/editContactController")).editContactController;
-    editCategoryController = (await import("../../Layers/ApplicationLayer/JSON/editCategoryController")).editCategoryController;
-  } else {
-    addContactController = (await import("../../Layers/ApplicationLayer/SQLite/addContactController")).addContactController;
-    removeContactController = (await import("../../Layers/ApplicationLayer/SQLite/removeContactController")).removeContactController;
-    viewContactController = (await import("../../Layers/ApplicationLayer/SQLite/viewContactController")).viewContactController;
-    editContactController = (await import("../../Layers/ApplicationLayer/SQLite/editContactController")).editContactController;
-    editCategoryController = (await import("../../Layers/ApplicationLayer/SQLite/editCategoryController")).editCategoryController;
+  switch (currentStorage) {
+    case StorageType.JSON:
+      storage = new JSONStorage();
+      break;
+    case StorageType.SQLITE:
+      storage = new SQLiteStorage();
+      break;
+    default:
+      throw new Error("Unsupported storage type");
   }
-
   return {
-    addContactController,
-    removeContactController,
-    viewContactController,
-    editContactController,
-    editCategoryController
+    addContactController: new AddContactController(storage),
+    removeContactController: new RemoveContactController(storage),
+    viewContactController: new ViewContactController(storage),
+    editContactController: new EditContactController(storage),
+    editCategoryController: new EditCategoryController(storage),
   };
 }

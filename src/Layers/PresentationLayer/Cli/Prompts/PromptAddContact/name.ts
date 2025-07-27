@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { validateName } from '../../../UI-Validation/validateName';
+import { validateName } from '../../../../../Validation/UI-Validation/validateName';
 
 export const promptAddName = async (): Promise<string> => {
     let name: string; 

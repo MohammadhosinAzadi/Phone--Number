@@ -1,6 +1,6 @@
 import { db } from "../../../DBSetup/SQLite/setupSQLite";
 
-export const getCategories = async (): Promise<string[] | null> => {
+export const getCategories = async (): Promise<string[]> => {
   return new Promise((resolve, reject) => {
     db.all("SELECT DISTINCT name FROM categories", [], (err, rows) => {
       if (err) reject(err);

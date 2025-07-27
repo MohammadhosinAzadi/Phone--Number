@@ -1,15 +1,10 @@
-import { getContactByPhone } from "../../../Repositories/SQLite/Contact/getContactByPhone";
-import { editContactInSQLite } from "../../../Layers/DataAccessLayer/SQLite/editContactInSQLite";
-import { getPromptUpdatedData } from "../../../Layers/PresentationLayer/Cli/Prompts/promptEditContact";
 import { Record } from "../../../Typs/record";
+import { validateName } from "../../../Validation/UI-Validation/validateName";
+import { validatePhone } from "../../../Validation/UI-Validation/validatePhone";
+import { editContactInSQLite } from "../../../Layers/DataAccessLayer/SQLite/editContactInSQLite";
 
-export const editContact = async (phone: string): Promise<void> => {
-  const contact = await getContactByPhone(phone);
-  if (contact === null) {
-    console.log("Contact not found.");
-    return;
-  }
-  const updatedData: Record = await getPromptUpdatedData(contact);
-  await editContactInSQLite(phone, updatedData);
-  console.log("Contact updated successfully!");
-};
+export async function editContactSQLite(originalPhone: string, updatedContact: Record): Promise<void> {
+  validateName(updatedContact.name);
+  validatePhone(updatedContact.phone);
+  await editContactInSQLite(originalPhone, updatedContact);
+}

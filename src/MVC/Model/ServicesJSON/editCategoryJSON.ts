@@ -27,8 +27,8 @@ export async function editCategoryJSON(
 
     dataCategory[index] = newCategoryName;
     await saveToJSON(categoryPath, dataCategory);
-    console.log("✅ Category updated successfully.");
+    console.log("Category updated successfully.");
   } catch (error: any) {
-    console.error("❌ Error editing category:", error.message || error);
+    console.error("Error editing category:", error.message || error);
   }
 }
